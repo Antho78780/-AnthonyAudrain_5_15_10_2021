@@ -1,21 +1,16 @@
-const api = fetch('http://localhost:3000/api/products');
-api.then (reponse => reponse.json())
-    .then (data => {
-        console.log(data)
-        let array = [];
-       for (let boucle of data) {
-           array += `<a href=""><article><img src = "${boucle.imageUrl}"><h3>"${boucle.name}"<h3><p>"${boucle.description}"</p></article></a>`
-       }
-       document.getElementById('items').innerHTML = array;
-       console.log(array)
+const link = fetch(`http://localhost:3000/api/products`);
+link.then(reponse => reponse.json())
+    .then(productArray => {
+        console.log(productArray)
+        for (let product of productArray) {
+            document.querySelector('#items').innerHTML +=
+            `<a href="./product.html?id=${product._id}"><article><img src="${product.imageUrl}" alt="${product.altTxt}">
+            <h3 class="productname>"${product.name}"</h3><p class="productDescription">"${product.description}"</p></article></a>`
+        }
     })
-
-
-
-
-
-
-
+   
+   
+  
 
 
 
