@@ -8,8 +8,7 @@ link.then(reponse => reponse.json())
             <h3 class="productname>"${product.name}"</h3><p class="productDescription">"${product.description}"</p></article></a>`
         }
     })
-   
-   
+
   
 
 
