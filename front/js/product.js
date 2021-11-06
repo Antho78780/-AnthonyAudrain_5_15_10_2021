@@ -13,10 +13,14 @@ requete.then (reponse => reponse.json())
         const recupDescription = document.querySelector("#description").innerHTML =`${product.description}`;
         const recupColors = product.colors;
         product.colors.forEach(color => {
-             document.querySelector('#colors').innerHTML += `<option value="">${color}</option>`;
+             const choixColors = document.querySelector('#colors').innerHTML += `<option value="">${color}</option>`;
         });
-        const choixColors = document.querySelector("#colors");
         const sendPanier = document.querySelector("#addToCart");
+        sendPanier.addEventListener("click", function() {
+            localStorage.setItem("Id", id);
+            localStorage.setItem("colors", recupColors);
+            console.log(localStorage);
+        })
     })
 
 
