@@ -11,10 +11,15 @@ requete.then (reponse => reponse.json())
         const recupTitle = document.querySelector("#title").innerHTML =`${product.name}`;
         const recupPrice = document.querySelector("#price").innerHTML =`${product.price}`;
         const recupDescription = document.querySelector("#description").innerHTML =`${product.description}`;
+        const recupColors = product.colors;
         product.colors.forEach(color => {
              document.querySelector('#colors').innerHTML += `<option value="">${color}</option>`;
         });
+        const choixColors = document.querySelector("#colors");
+        const sendPanier = document.querySelector("#addToCart");
     })
+
+
  
  
 
