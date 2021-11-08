@@ -1,25 +1,30 @@
 
-console.log(window.location);
 const idProduct = new URLSearchParams(window.location.search);
 const id = idProduct.get("id");
-console.log(id)
 const requete = fetch(`http://localhost:3000/api/products/${id}`);
 requete.then (reponse => reponse.json())
     .then (product => {
-        console.log(product)
-        const recupImg = document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
-        const recupTitle = document.querySelector("#title").innerHTML =`${product.name}`;
-        const recupPrice = document.querySelector("#price").innerHTML =`${product.price}`;
-        const recupDescription = document.querySelector("#description").innerHTML =`${product.description}`;
-        const recupColors = product.colors;
-        product.colors.forEach(color => {
-             const choixColors = document.querySelector('#colors').innerHTML += `<option value="">${color}</option>`;
-        });
+        console.log(product);
+        document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+        document.querySelector("#title").innerHTML =`${product.name}`;
+        document.querySelector("#price").innerHTML =`${product.price}`;
+        document.querySelector("#description").innerHTML =`${product.description}`;
+        const quantite = document.querySelector('#quantity');
         const sendPanier = document.querySelector("#addToCart");
-        sendPanier.addEventListener("click", function() {
-            localStorage.setItem("Id", id);
-            localStorage.setItem("colors", recupColors);
-            console.log(localStorage);
+        console.log(sendPanier);
+        const recupColors =  document.querySelector("#colors");
+        product.colors.forEach(color => {
+            document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
+        });
+        sendPanier.addEventListener("click", function(event) {
+            event.preventDefault();
+            const IdColorsQuantiteDuProduit = {
+                id,
+                choixColors: recupColors.value,
+                quantite,
+            }
+            IdColorsQuantiteDuProduit;
+            console.log(IdColorsQuantiteDuProduit);
         })
     })
 
