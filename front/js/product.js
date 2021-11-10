@@ -10,28 +10,36 @@ requete.then (reponse => reponse.json())
         document.querySelector("#price").innerHTML =`${product.price}`;
         document.querySelector("#description").innerHTML =`${product.description}`;
 
-        const quantite = document.querySelector('#quantity');
+        const recupQuantite = document.querySelector('#quantity');
         const sendPanier = document.querySelector("#addToCart");
         const recupColors =  document.querySelector("#colors");
-        const productArray = []
 
         product.colors.forEach(color => {
             document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
         });
 
-        sendPanier.addEventListener("click", function(event) {
-            event.preventDefault();
-            const IdColorsQuantiteDuProduit = {
-                Id: product._id,
-                Colors: recupColors.value,
-                Quantite: quantite.value,
+        sendPanier.addEventListener("click", function() {
+            alert(" Vous avez ajouté l'article " + product.name + " au panier");
+            let idColorsQuantiteDuProduit =  {
+                id: product._id,
+                colors:   recupColors.value,
+                quantite: recupQuantite.value,
             }
-            productArray.push(IdColorsQuantiteDuProduit);
-            localStorage.setItem("option_produit", JSON.stringify(productArray));
-            const getLocal = JSON.parse(localStorage.getItem("option_produit"));
-            console.log(getLocal);
+            let array = [];
+            array = JSON.parse(localStorage.getItem("panier"));
+            if(array) {
+                array.push(idColorsQuantiteDuProduit);
+                localStorage.setItem("panier", JSON.stringify(array));   
+            }
+            else {
+                array = [];
+                array.push(idColorsQuantiteDuProduit);
+                localStorage.setItem("panier", JSON.stringify(array)); 
+            }  
         })
+
     })
+    
 
 
  

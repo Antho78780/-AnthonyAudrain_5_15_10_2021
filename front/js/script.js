@@ -1,3 +1,4 @@
+
 const requete = fetch(`http://localhost:3000/api/products`);
 requete.then(reponse => reponse.json())
     .then(productArray => {
