@@ -22,8 +22,6 @@ requete.then (reponse => reponse.json())
             alert(" Vous avez ajouté l'article " + product.name + " au panier");
             let idColorsQuantiteDuProduit =  {
                 name: product.name,
-                description: product.description,
-                altTxt: product.altTxt,
                 img: product.imageUrl,
                 price: product.price,
                 id: product._id,
