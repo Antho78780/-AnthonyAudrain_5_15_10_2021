@@ -1,4 +1,4 @@
-
+//////////// AJOUT DE TOUT LES PRODUITS DUR LA PAGE D'ACCEUIL///////////
 const requete = fetch(`http://localhost:3000/api/products`);
 requete.then(reponse => reponse.json())
     .then(productArray => {

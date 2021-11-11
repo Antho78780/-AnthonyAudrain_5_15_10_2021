@@ -1,6 +1,8 @@
-
+//////////////// CREATION DE l'id DU PRODUIT POUR RENDRE L'ID UNIQUE////////////////////
 const idProduct = new URLSearchParams(window.location.search);
 const _id = idProduct.get("id");
+
+///////////////// AJOUT DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);
 requete.then (reponse => reponse.json())
     .then (product => {
@@ -10,14 +12,14 @@ requete.then (reponse => reponse.json())
         document.querySelector("#price").innerHTML =`${product.price}`;
         document.querySelector("#description").innerHTML =`${product.description}`;
 
-        const recupQuantite = document.querySelector('#quantity');
+        const recupQuantite = document.querySelector('#quantity')
         const sendPanier = document.querySelector("#addToCart");
         const recupColors =  document.querySelector("#colors");
 
         product.colors.forEach(color => {
             document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
         });
-
+///////////////// AJOUT DE l'ELEMENT ADDEVENTLISTENER POUR CLICKER SUR LE BUTTON PANIER POUR ENVOYER LE PRODUIT DANS LE LOCALSTORAGE//////////////////////////////////////
         sendPanier.addEventListener("click", function() {
             alert(" Vous avez ajouté l'article " + product.name + " au panier");
             let idColorsQuantiteDuProduit =  {
@@ -30,6 +32,8 @@ requete.then (reponse => reponse.json())
             }
             let array = [];
             array = JSON.parse(localStorage.getItem("panier"));
+
+            ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
             if(array) {
                 array.push(idColorsQuantiteDuProduit);
                 localStorage.setItem("panier", JSON.stringify(array));   
@@ -40,7 +44,6 @@ requete.then (reponse => reponse.json())
                 localStorage.setItem("panier", JSON.stringify(array)); 
             }  
         })
-
     })
     
 
