@@ -57,9 +57,6 @@ envoyerCommande.addEventListener("click", function(event) {
 })
 
 
-
-
-
 const requestPost = fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
