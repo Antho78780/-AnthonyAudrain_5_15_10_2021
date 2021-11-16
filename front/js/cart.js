@@ -54,16 +54,13 @@ const envoyerCommande = document.querySelector("#order");
         for (let recupId of recupLocalStorage) {
             products.push(recupId.id);
         }
-        const obj = {
+        const objetContactEtProducts = {
             contact,
             products,
         }
-
-        console.log(obj)
-
         const requestPost = fetch("http://localhost:3000/api/products/order", {
             method: "POST",
-            body: JSON.stringify(obj),
+            body: JSON.stringify(objetContactEtProducts),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
@@ -73,9 +70,13 @@ const envoyerCommande = document.querySelector("#order");
         requestPost.then (reponse => reponse.json())
         .then (data => {
             console.log(data);
+            localStorage.setItem("orderId", JSON.stringify(data.orderId));
+    
         })
+        window.location = "confirmation.html";
     })
-
+    const test = document.querySelector(".limitedWidthBlockContainer").innerHTML = `<script src="../js/confirmation.js"></script>`;
+    console.log(test)
 
    
 
