@@ -21,12 +21,11 @@ for (let panier of recupLocalStorage) {
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
     </div></div></div></article`;
 
-    const localDelete = document.querySelector(".deleteItem");
-    localDelete.addEventListener("click", function(event) {
-        event.preventDefault();
-        alert( "Vous avez supprimé l'article " + panier.name + " du panier");
-    })
 }
+const localDelete = document.querySelectorAll(".deleteItem");
+console.log(localDelete);
+
+
 console.log(recupLocalStorage)
 const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
 const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
@@ -75,8 +74,7 @@ const envoyerCommande = document.querySelector("#order");
         })
         window.location = "confirmation.html";
     })
-    const test = document.querySelector(".limitedWidthBlockContainer").innerHTML = `<script src="../js/confirmation.js"></script>`;
-    console.log(test)
+    
 
    
 
