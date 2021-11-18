@@ -1,15 +1,14 @@
 
 /////////////// RECUPERATION DU LOCALSTORAGE DES PRODUITS EN QUESTION DANS LE PANIER ////////////////////
-const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
+let recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
 const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
 
 const arrayPrice = [];
 const arrayQuantity = [];
 
 ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
-
 for (let panier of recupLocalStorage) {
-    const quantite = parseInt(panier.quantite);
+    let quantite = parseInt(panier.quantite);
     const total = panier.price * quantite;
     arrayQuantity.push(quantite);
     arrayPrice.push(total);
@@ -20,10 +19,16 @@ for (let panier of recupLocalStorage) {
     <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
     </div></div></div></article`;
-
+    const choisirQuantite = document.querySelector(".itemQuantity");
+    choisirQuantite.addEventListener("click", function(event) {
+        event.preventDefault();
+        quantite++;
+       
+    })
+    
 }
-const localDelete = document.querySelectorAll(".deleteItem");
-console.log(localDelete);
+
+
 
 
 console.log(recupLocalStorage)
@@ -74,6 +79,8 @@ const envoyerCommande = document.querySelector("#order");
         })
         window.location = "confirmation.html";
     })
+
+   
     
 
    
