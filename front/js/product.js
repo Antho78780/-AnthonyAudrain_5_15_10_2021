@@ -32,7 +32,6 @@ requete.then (reponse => reponse.json())
             }
             let array = [];
             array = JSON.parse(localStorage.getItem("panier"));
-
             ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
             if(array) {
                 array.push(optionsProduit);
@@ -43,17 +42,32 @@ requete.then (reponse => reponse.json())
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array)); 
             }
-            console.log(array);
-        })
-        console.log(JSON.parse(localStorage.getItem("panier")));
+            let arrayId = [];
+            for (let recupBoucleId of array) {
+                arrayId.push(recupBoucleId.id);
+            }
+           
 
+           
+           
+
+           
+           
+
+          
+        
+        })
+        
         if(JSON.parse(localStorage.getItem("panier"))) {
         }
         else {
             console.log("Aucun produit ajouté dans le localStorage")
         }
+
         
+    
     })
+    
     
 
 
