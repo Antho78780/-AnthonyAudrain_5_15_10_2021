@@ -5,9 +5,11 @@ const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + curr
 
 const arrayPrice = [];
 const arrayQuantity = [];
-
+const tabItem = [];
 ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
-for (let panier of recupLocalStorage) {
+recupLocalStorage.forEach(panier => {
+    tabItem.push(panier);
+
     let quantite = parseInt(panier.quantite);
     const total = panier.price * quantite;
     arrayQuantity.push(quantite);
@@ -19,15 +21,21 @@ for (let panier of recupLocalStorage) {
     <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
     </div></div></div></article`;  
-    const deleteItem = document.querySelector(".deleteItem");
-        deleteItem.addEventListener("click", function(e) {
-        e.preventDefault();
+    console.log(panier);
+}); 
+const deleteItem = document.querySelectorAll(".deleteItem");
+console.log(deleteItem);
+deleteItem.forEach(item => {
+    item.addEventListener("click", function(e){
+        e.preventDefault();   
     })
-}
+});
 
 
 
-console.log(recupLocalStorage)
+
+
+
 const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
 const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
