@@ -42,10 +42,14 @@ requete.then (reponse => reponse.json())
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array)); 
             }
-            let arrayId = [];
-            for (let recupBoucleId of array) {
-                arrayId.push(recupBoucleId.id);
-            }
+           
+           
+           
+           
+            
+            
+    
+           
            
 
            

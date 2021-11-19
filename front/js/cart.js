@@ -19,7 +19,12 @@ for (let panier of recupLocalStorage) {
     <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
     </div></div></div></article`;  
+    const deleteItem = document.querySelector(".deleteItem");
+        deleteItem.addEventListener("click", function(e) {
+        e.preventDefault();
+    })
 }
+
 
 
 console.log(recupLocalStorage)
