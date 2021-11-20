@@ -5,31 +5,39 @@ const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + curr
 
 const arrayPrice = [];
 const arrayQuantity = [];
-const tabItem = [];
+
 ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
 recupLocalStorage.forEach(panier => {
-    tabItem.push(panier);
-
     let quantite = parseInt(panier.quantite);
     const total = panier.price * quantite;
     arrayQuantity.push(quantite);
     arrayPrice.push(total);
-    
     document.querySelector("#cart__items").innerHTML +=
     `<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}"></div><div class="cart__item__content">
     <div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
     <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-    </div></div></div></article`;  
+    </div></div></div></article`; 
     console.log(panier);
-}); 
-const deleteItem = document.querySelectorAll(".deleteItem");
-console.log(deleteItem);
-deleteItem.forEach(item => {
-    item.addEventListener("click", function(e){
-        e.preventDefault();   
-    })
 });
+
+const deleteItem = document.querySelectorAll(".deleteItem");
+for (let i=0; i<deleteItem.length;i++) {
+    deleteItem[i].addEventListener("click", function(e) {
+        e.preventDefault();
+        alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier")
+        let produitSupp = recupLocalStorage[i].id;
+        const filtre = recupLocalStorage.filter(el => el.id !== produitSupp);
+        console.log(filtre);
+        localStorage.removeItem("panier")
+        localStorage.setItem("panier", JSON.stringify(filtre));
+        window.location.href = "cart.html";
+    })
+}
+
+
+
+
 
 
 

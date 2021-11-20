@@ -42,24 +42,6 @@ requete.then (reponse => reponse.json())
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array)); 
             }
-           
-           
-           
-           
-            
-            
-    
-           
-           
-
-           
-           
-
-           
-           
-
-          
-        
         })
         
         if(JSON.parse(localStorage.getItem("panier"))) {
@@ -67,9 +49,6 @@ requete.then (reponse => reponse.json())
         else {
             console.log("Aucun produit ajouté dans le localStorage")
         }
-
-        
-    
     })
     
     
