@@ -1,6 +1,7 @@
 //////////////// CREATION DE l'id DU PRODUIT POUR RENDRE L'ID UNIQUE////////////////////
 const idProduct = new URLSearchParams(window.location.search);
 const _id = idProduct.get("id");
+console.log(window.location)
 
 ///////////////// AJOUT DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);

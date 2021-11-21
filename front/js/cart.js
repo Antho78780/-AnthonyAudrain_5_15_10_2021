@@ -12,14 +12,15 @@ recupLocalStorage.forEach(panier => {
     const total = panier.price * quantite;
     arrayQuantity.push(quantite);
     arrayPrice.push(total);
-    document.querySelector("#cart__items").innerHTML +=
+    const recupArticle = document.querySelector("#cart__items").innerHTML +=
     `<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}"></div><div class="cart__item__content">
     <div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
     <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
     </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-    </div></div></div></article`; 
+    </div></div></div></article`;
     console.log(panier);
 });
+
 
 const deleteItem = document.querySelectorAll(".deleteItem");
 for (let i=0; i<deleteItem.length;i++) {
@@ -34,16 +35,6 @@ for (let i=0; i<deleteItem.length;i++) {
         window.location.href = "cart.html";
     })
 }
-
-
-
-
-
-
-
-
-
-
 const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
 const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
@@ -74,8 +65,7 @@ const envoyerCommande = document.querySelector("#order");
             contact,
             products,
         }
-        
-        const requestPost = fetch("http://localhost:3000/api/products/order", {
+        const requestPost = fetch(`http://localhost:3000/api/products/order`, {
             method: "POST",
             body: JSON.stringify(objetContactEtProducts),
             headers: {
@@ -83,21 +73,18 @@ const envoyerCommande = document.querySelector("#order");
                 'Accept': 'application/json',
             },
         })
-        console.log(requestPost);
-        requestPost.then (reponse => reponse.json())
+        console.log(requestPost)
+        requestPost
+        .then (res => res.json())
         .then (data => {
             console.log(data);
-            localStorage.setItem("orderId", JSON.stringify(data.orderId));
-    
         })
+         const recupOrder = document.querySelector("#orderId");
         /*
         window.location = "confirmation.html";
-        */
+       */
     })
-
-   
     
-
    
 
 
