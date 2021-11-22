@@ -7,20 +7,23 @@ const arrayPrice = [];
 const arrayQuantity = [];
 
 ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
-recupLocalStorage.forEach(panier => {
-    let quantite = parseInt(panier.quantite);
-    const total = panier.price * quantite;
-    arrayQuantity.push(quantite);
-    arrayPrice.push(total);
-    const recupArticle = document.querySelector("#cart__items").innerHTML +=
-    `<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}"></div><div class="cart__item__content">
-    <div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
-    <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
-    </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-    </div></div></div></article`;
-    console.log(panier);
-});
-
+        recupLocalStorage.forEach(panier => {
+            let quantite = parseInt(panier.quantite);
+            const total = panier.price * quantite;
+            arrayQuantity.push(quantite);
+            arrayPrice.push(total);
+            const recupArticle = document.querySelector("#cart__items").innerHTML +=
+            `<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}"></div><div class="cart__item__content">
+            <div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
+            </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
+            </div></div></div></article`;
+            console.log(panier)
+        });
+const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
+const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
+document.querySelector("#totalPrice").innerHTML = `${totalPrice}`;
+document.querySelector("#totalQuantity").innerHTML = `${totalQuantite}`;
 
 const deleteItem = document.querySelectorAll(".deleteItem");
 for (let i=0; i<deleteItem.length;i++) {
@@ -35,20 +38,12 @@ for (let i=0; i<deleteItem.length;i++) {
         window.location.href = "cart.html";
     })
 }
-const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
-const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
-
-
-document.querySelector("#totalPrice").innerHTML = `${totalPrice}`;
-document.querySelector("#totalQuantity").innerHTML = `${totalQuantite}`;
 
 const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 
-
     envoyerCommande.addEventListener("click", function(event) {
         event.preventDefault();
-    
         const contact = {
             firstName: recupFormulaire[0].value,
             lastName: recupFormulaire[1].value,
@@ -57,6 +52,47 @@ const envoyerCommande = document.querySelector("#order");
             email: recupFormulaire[4].value,
         }
         const products = []; 
+
+            function prenom () {
+                const regexPrenom = contact.firstName;
+                if(/^[A-Za-z]{3,15}$/.test(regexPrenom)) {
+                    return true;
+                }else {
+                    return false;
+                };
+            };
+            function nom () {
+                const regexNom = contact.lastName;
+                if(/^[A-Za-z]{3,15}$/.test(regexNom)) {
+                    return true;
+                }else {
+                  return false;
+                };
+            }
+            function address () {
+                const regexAdress = contact.address;
+                if(/^[ A-Za-z-0-9 ]{5,25}$/.test(regexAdress)) {
+                    return true;
+                }else {
+                    return false;
+                };
+            };
+            function ville() {
+                const regexVille = contact.city;
+                if(/^[A-Za-z]{4,15}$/.test(regexVille)) {
+                    return true;
+                }else {
+                  return false;
+                };
+            }
+            function email () {
+                const regexEmail = contact.email;
+                if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(regexEmail)) {
+                    return true;
+                }else {
+                    return false;
+                };
+            };
 
         for (let recupId of recupLocalStorage) {
             products.push(recupId.id);
@@ -67,23 +103,33 @@ const envoyerCommande = document.querySelector("#order");
         }
         const requestPost = fetch(`http://localhost:3000/api/products/order`, {
             method: "POST",
-            body: JSON.stringify(objetContactEtProducts),
+            body : JSON.stringify(objetContactEtProducts),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
         })
-        console.log(requestPost)
         requestPost
         .then (res => res.json())
         .then (data => {
-            console.log(data);
+            if(prenom() && nom() && address() && ville() & email()) {
+                objetContactEtProducts
+            }
+            else {
+                alert("Informations incorrect")
+                data = undefined;
+                console.log("undefined car l'utilisateur a saisie de mauvaises information dans le formulaire");
+            }
+          
+            console.log(data)
         })
-         const recupOrder = document.querySelector("#orderId");
+            const recupOrder = document.querySelector("#orderId");
         /*
         window.location = "confirmation.html";
-       */
+        */
     })
+
+
     
    
 
