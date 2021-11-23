@@ -1,143 +1,147 @@
 
 /////////////// RECUPERATION DU LOCALSTORAGE DES PRODUITS EN QUESTION DANS LE PANIER ////////////////////
-    let recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
-    const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
+const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
+const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
 
-    const arrayPrice = [];
-    const arrayQuantity = [];
+const arrayPrice = [];
+const arrayQuantity = [];
 
     ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
-    recupLocalStorage.forEach(panier => {
-        let quantite = parseInt(panier.quantite);
-        const total = panier.price * quantite;
-        arrayQuantity.push(quantite);
-        arrayPrice.push(total);
-            const recupArticle = document.querySelector("#cart__items");
-            if(recupArticle) {
-            recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}">
-            </div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
-            <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
-            </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-            </div></div></div></article`;
-            }else {
-                console.log("erreur des articles")
-            }
-            console.log(panier);
-           
-            const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
-            const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
+recupLocalStorage.forEach(panier => {
+    const quantite = parseInt(panier.quantite);
+    const total = panier.price * quantite;
+    arrayQuantity.push(quantite);
+    arrayPrice.push(total);
+    const recupArticle = document.querySelector("#cart__items");
+    if(recupArticle) {
+        recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" alt="${panier.altTxt}">
+        </div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
+        </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
+        </div></div></div></article`;
+    }else {
+        console.log("erreur des articles")
+    }
+    console.log(panier);
+    
+    const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
+    const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
-            const recupPrice = document.querySelector("#totalPrice");
-            const recupQuantite = document.querySelector("#totalQuantity");
-            if(recupPrice && recupQuantite) {
-            recupPrice.innerHTML = `${totalPrice}`;
-            recupQuantite.innerHTML = `${totalQuantite}`
+    const recupPrice = document.querySelector("#totalPrice");
+    const recupQuantite = document.querySelector("#totalQuantity");
+
+    if(recupPrice && recupQuantite) {
+        recupPrice.innerHTML = `${totalPrice}`;
+        recupQuantite.innerHTML = `${totalQuantite}`
+    }else {
+        console.log("erreur des prix totaux")
+    }
+});
+const deleteItem = document.querySelectorAll(".deleteItem");
+for (let i=0; i<deleteItem.length;i++) {
+    deleteItem[i].addEventListener("click", function(e) {
+        e.preventDefault();
+        alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier")
+        let produitSupp = recupLocalStorage[i].id;
+        const filtre = recupLocalStorage.filter(el => el.id !== produitSupp);
+        console.log(filtre);
+        localStorage.setItem("panier", JSON.stringify(filtre));
+        window.location.href = "cart.html";
+    })
+}
+const recupFormulaire = document.querySelector(".cart__order__form");
+const envoyerCommande = document.querySelector("#order");
+     
+if(envoyerCommande) {
+    envoyerCommande.addEventListener("click", function(event) {
+        event.preventDefault();
+        const contact = {
+            firstName: recupFormulaire[0].value,
+            lastName: recupFormulaire[1].value,
+            address: recupFormulaire[2].value,
+            city: recupFormulaire[3].value,
+            email: recupFormulaire[4].value,
+        }
+        const products = []; 
+        for (let recupId of recupLocalStorage) {
+            products.push(recupId.id);
+        }
+        const objetContactEtProducts = {
+            contact,
+            products,
+        }
+        function prenom () {
+            const regexPrenom = contact.firstName;
+            if(/^[A-Za-z]{3,15}$/.test(regexPrenom)) {
+                return true;
             }else {
-                console.log("erreur des prix totaux")
-            }
-    });
-    const deleteItem = document.querySelectorAll(".deleteItem");
-    for (let i=0; i<deleteItem.length;i++) {
-        deleteItem[i].addEventListener("click", function(e) {
-            e.preventDefault();
-            alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier")
-            let produitSupp = recupLocalStorage[i].id;
-            const filtre = recupLocalStorage.filter(el => el.id !== produitSupp);
-            console.log(filtre);
-            localStorage.setItem("panier", JSON.stringify(filtre));
-            window.location.href = "cart.html";
+                return false;
+            };
+        };
+        function nom () {
+            const regexNom = contact.lastName;
+            if(/^[A-Za-z]{3,15}$/.test(regexNom)) {
+                return true;
+            }else {
+            return false;
+            };
+        }
+        function address () {
+            const regexAdress = contact.address;
+            if(/^[ A-Za-z-0-9 ]{5,25}$/.test(regexAdress)) {
+                return true;
+            }else {
+                return false;
+            };
+        };
+        function ville() {
+            const regexVille = contact.city;
+            if(/^[A-Za-z]{4,15}$/.test(regexVille)) {
+                return true;
+            }else {
+            return false;
+            };
+        }
+        function email () {
+            const regexEmail = contact.email;
+            if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(regexEmail)) {
+                return true;
+            }else {
+                return false;
+            };
+        };
+        const requestPost = fetch(`http://localhost:3000/api/products/order`, {
+            method: "POST",
+            body : JSON.stringify(objetContactEtProducts),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
         })
-    }
-    const recupFormulaire = document.querySelector(".cart__order__form");
-    const envoyerCommande = document.querySelector("#order");
+        requestPost
+        .then (res => res.json())    
+        .then (data => {
+            if(prenom() && nom() && address() && ville() & email()) {
+                console.log("Formulaire envoyé")
+            }
+            else {
+                alert("Informations incorrect")
+                data = undefined;
+                console.log("Le formulaire ne peut pas étre envoyer avec des mauvaises informations");
+            }
+            console.log(data);
+            console.log(data.orderId);
+        });
+        
+        /*
+        window.location = "confirmation.html";
+        */
+    }) 
+}else {
     const recupOrderId = document.querySelector("#orderId");
-    if(envoyerCommande) {
-        envoyerCommande.addEventListener("click", function(event) {
-            event.preventDefault();
-            const contact = {
-                firstName: recupFormulaire[0].value,
-                lastName: recupFormulaire[1].value,
-                address: recupFormulaire[2].value,
-                city: recupFormulaire[3].value,
-                email: recupFormulaire[4].value,
-            }
-            const products = []; 
-
-                function prenom () {
-                    const regexPrenom = contact.firstName;
-                    if(/^[A-Za-z]{3,15}$/.test(regexPrenom)) {
-                        return true;
-                    }else {
-                        return false;
-                    };
-                };
-                function nom () {
-                    const regexNom = contact.lastName;
-                    if(/^[A-Za-z]{3,15}$/.test(regexNom)) {
-                        return true;
-                    }else {
-                    return false;
-                    };
-                }
-                function address () {
-                    const regexAdress = contact.address;
-                    if(/^[ A-Za-z-0-9 ]{5,25}$/.test(regexAdress)) {
-                        return true;
-                    }else {
-                        return false;
-                    };
-                };
-                function ville() {
-                    const regexVille = contact.city;
-                    if(/^[A-Za-z]{4,15}$/.test(regexVille)) {
-                        return true;
-                    }else {
-                    return false;
-                    };
-                }
-                function email () {
-                    const regexEmail = contact.email;
-                    if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(regexEmail)) {
-                        return true;
-                    }else {
-                        return false;
-                    };
-                };
-
-            for (let recupId of recupLocalStorage) {
-                products.push(recupId.id);
-            }
-            const objetContactEtProducts = {
-                contact,
-                products,
-            }
-            const requestPost = fetch(`http://localhost:3000/api/products/order`, {
-                method: "POST",
-                body : JSON.stringify(objetContactEtProducts),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            })
-            requestPost
-            .then (res => res.json())              
-            .then (data => {
-                if(prenom() && nom() && address() && ville() & email()) {
-                    objetContactEtProducts;
-                }
-                else {
-                    alert("Informations incorrect")
-                    data = undefined;
-                    console.log("undefined car l'utilisateur a saisie de mauvaises information dans le formulaire");
-                }
-                console.log(data);
-                console.log(data.orderId);
-            });
-            /*
-            window.location = "confirmation.html";
-            */
-        }) 
-    }
+    console.log(recupOrderId);
+    recupOrderId.innerHTML = ``;
+}
     
    
    
