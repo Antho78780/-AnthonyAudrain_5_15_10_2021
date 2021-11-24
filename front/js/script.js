@@ -3,7 +3,8 @@ const requeteGet = fetch(`http://localhost:3000/api/products`);
 requeteGet
 .then(reponse => reponse.json())
 .then(productArray => {
-    console.log(productArray)
+    console.log("Affichage de tout les produits")
+    console.log(productArray);
     for (let product of productArray) {
         document.querySelector('#items').innerHTML +=
         `<a href="./product.html?id=${product._id}"><article><img src="${product.imageUrl}" alt="${product.altTxt}">

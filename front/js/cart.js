@@ -1,6 +1,8 @@
 
 /////////////// RECUPERATION DU LOCALSTORAGE DES PRODUITS EN QUESTION DANS LE PANIER ////////////////////
 const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
+console.log("Affichage des produits du panier")
+console.log(recupLocalStorage);
 const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
 
 const arrayPrice = [];
@@ -8,7 +10,7 @@ const arrayQuantity = [];
 
     ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
 recupLocalStorage.forEach(panier => {
-    const quantite = parseInt(panier.quantite);
+    let quantite = parseInt(panier.quantite);
     const total = panier.price * quantite;
     arrayQuantity.push(quantite);
     arrayPrice.push(total);
@@ -18,12 +20,24 @@ recupLocalStorage.forEach(panier => {
         </div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier.name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
         </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-        </div></div></div></article`;
+        </div></div></div></article`;  
+        const recupItemQuantity = document.querySelectorAll(".itemQuantity");
+        for (let i = 0; i < recupItemQuantity.length;i++) {
+            recupItemQuantity[i].addEventListener("click", function(e) {
+                e.preventDefault();
+                const valueQuantite = recupItemQuantity[i].value;
+                console.log(valueQuantite)
+                if(valueQuantite) {
+                    quantite++;
+                    panier.quantite = quantite;
+                }else {
+                }
+                
+            })
+        }
     }else {
-        console.log("erreur des articles")
     }
-    console.log(panier);
-    
+
     const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
     const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
@@ -34,7 +48,6 @@ recupLocalStorage.forEach(panier => {
         recupPrice.innerHTML = `${totalPrice}`;
         recupQuantite.innerHTML = `${totalQuantite}`
     }else {
-        console.log("erreur des prix totaux")
     }
 });
 const deleteItem = document.querySelectorAll(".deleteItem");
@@ -122,14 +135,15 @@ if(envoyerCommande) {
         .then (res => res.json())    
         .then (data => {
             if(prenom() && nom() && address() && ville() & email()) {
-                console.log("Formulaire envoyé")
             }
             else {
                 alert("Informations incorrect")
                 data = undefined;
                 console.log("Le formulaire ne peut pas étre envoyer avec des mauvaises informations");
             }
+            console.log("Réponse du back-end")
             console.log(data);
+            console.log("OrderId")
             console.log(data.orderId);
         });
         

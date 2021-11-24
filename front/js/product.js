@@ -1,7 +1,6 @@
 //////////////// CREATION DE l'id DU PRODUIT POUR RENDRE L'ID UNIQUE////////////////////
 const idProduct = new URLSearchParams(window.location.search);
 const _id = idProduct.get("id");
-console.log(window.location)
 
 ///////////////// AJOUT DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);
@@ -21,6 +20,7 @@ requete
         document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
     });
       //////////// AJOUT DE l'ELEMENT ADDEVENTLISTENER POUR CLICKER SUR LE BUTTON PANIER POUR ENVOYER LE PRODUIT DANS LE LOCALSTORAGE//////////////////////////////////////
+      
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();
         alert(" Vous avez ajouté l'article " + product.name + " au panier");
@@ -35,20 +35,21 @@ requete
         let array = [];
         array = JSON.parse(localStorage.getItem("panier"));
         ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
-        if(array) {
-            array.push(optionsProduit);
-            localStorage.setItem("panier", JSON.stringify(array));   
-        }else {
-            array = [];
-            array.push(optionsProduit);
-            localStorage.setItem("panier", JSON.stringify(array)); 
-        }
-    })
         
-    if(JSON.parse(localStorage.getItem("panier"))){
-    }else {
-        console.log("Aucun produit ajouté dans le localStorage")
-    }
+            if(array) {
+                array.push(optionsProduit);
+                localStorage.setItem("panier", JSON.stringify(array));   
+            } else { 
+                array = [];
+                array.push(optionsProduit);
+                localStorage.setItem("panier", JSON.stringify(array)); 
+            }
+            console.log("envoie du array dans le localStorage")
+            console.log(array)
+    })
+    const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
+    console.log("recuperation du LocalStorage");
+    console.log(recupLocalStorage);
 })
     
     
