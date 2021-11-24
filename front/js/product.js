@@ -34,17 +34,21 @@ requete
         }
         let array = [];
         array = JSON.parse(localStorage.getItem("panier"));
-        ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
         
+    
+        ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
             if(array) {
+                array = array.filter(el => el.id != optionsProduit.id);
                 array.push(optionsProduit);
-                localStorage.setItem("panier", JSON.stringify(array));   
-            } else { 
+                localStorage.setItem("panier", JSON.stringify(array));                
+            }
+            else  { 
                 array = [];
                 array.push(optionsProduit);
+                optionsProduit.quantite + optionsProduit.quantite;
                 localStorage.setItem("panier", JSON.stringify(array)); 
             }
-            console.log("envoie du array dans le localStorage")
+            console.log("envoie du array dans le localStorage");
             console.log(array)
     })
     const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));

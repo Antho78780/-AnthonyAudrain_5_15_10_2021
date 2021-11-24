@@ -1,8 +1,6 @@
 
 /////////////// RECUPERATION DU LOCALSTORAGE DES PRODUITS EN QUESTION DANS LE PANIER ////////////////////
 const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
-console.log("Affichage des produits du panier")
-console.log(recupLocalStorage);
 const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
 
 const arrayPrice = [];
@@ -10,55 +8,52 @@ const arrayQuantity = [];
 
     ///////////// AJOUT DE TOUTE LES OPTIONS DU PRODUIT DANS UNE BOUCLE //////////////////
 for (let i = 0;i<recupLocalStorage.length;i++) {
-    let quantite = parseInt(recupLocalStorage[i].quantite);
-    const total = recupLocalStorage[i].price * quantite;
-    arrayQuantity.push(quantite);
-    arrayPrice.push(total);
-    const recupArticle = document.querySelector("#cart__items");
-    if(recupArticle) {
-        recupArticle.innerHTML +=`<article class="cart__item"data-id="${recupLocalStorage[i].id}"><div class="cart__item__img"><img src="${recupLocalStorage[i].img}" alt="${recupLocalStorage[i].altTxt}">
-        </div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${recupLocalStorage[i].name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
-        <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
-        </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
-        </div></div></div></article`;
-        console.log(recupLocalStorage[i]);
-        const recupItemQuantity = document.querySelectorAll(".itemQuantity");
-        for (let i = 0; i < recupItemQuantity.length;i++) {
-            recupItemQuantity[i].addEventListener("click", function(e) {
-                e.preventDefault();
-                console.log(recupLocalStorage[i])
-                const valueQuantite = recupItemQuantity[i].value;
-                console.log(valueQuantite);
-                if(valueQuantite) {
-                    quantite = valueQuantite;
-                    recupLocalStorage[i].quantite = quantite;
-                    localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
-                }else {
-                }
-            })
+        let quantite = parseInt(recupLocalStorage[i].quantite);
+        const total = recupLocalStorage[i].price * quantite;
+        arrayQuantity.push(quantite);
+        arrayPrice.push(total);
+        const recupArticle = document.querySelector("#cart__items");
+        if(recupArticle) {
+            recupArticle.innerHTML +=`<article class="cart__item"data-id="${recupLocalStorage[i].id}"><div class="cart__item__img"><img src="${recupLocalStorage[i].img}" alt="${recupLocalStorage[i].altTxt}">
+            </div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${recupLocalStorage[i].name}</h2><p>${total} €</p></div><div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity"><p>Quantité : </p><input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${quantite}">
+            </div><div class="cart__item__content__settings__delete"><p class="deleteItem">Supprimer</p>
+            </div></div></div></article`;
+            const recupItemQuantity = document.querySelectorAll(".itemQuantity");
+            for (let i = 0; i < recupItemQuantity.length;i++) {
+                recupItemQuantity[i].addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const valueQuantite = recupItemQuantity[i].value;
+                    if(valueQuantite) {
+                        quantite = valueQuantite;
+                        recupLocalStorage[i].quantite = quantite;
+                        localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
+                    }else {
+                    }
+                })
+            }
+        }else {
         }
-    }else {
-    }
 
-    const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
-    const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
+        const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
+        const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
-    const recupPrice = document.querySelector("#totalPrice");
-    const recupQuantite = document.querySelector("#totalQuantity");
+        const recupPrice = document.querySelector("#totalPrice");
+        const recupQuantite = document.querySelector("#totalQuantity");
 
-    if(recupPrice && recupQuantite) {
-        recupPrice.innerHTML = `${totalPrice}`;
-        recupQuantite.innerHTML = `${totalQuantite}`
-    }else {
-    }
-}
+        if(recupPrice && recupQuantite) {
+            recupPrice.innerHTML = `${totalPrice}`;
+            recupQuantite.innerHTML = `${totalQuantite}`
+        }else {
+        };
+};
 const deleteItem = document.querySelectorAll(".deleteItem");
 for (let i=0; i<deleteItem.length;i++) {
     deleteItem[i].addEventListener("click", function(e) {
         e.preventDefault();
         alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier")
         let produitSupp = recupLocalStorage[i].id;
-        const filtre = recupLocalStorage.filter(el => el.id !== produitSupp);
+        const filtre = recupLocalStorage.filter(el => el.id != produitSupp);
         console.log(filtre);
         localStorage.setItem("panier", JSON.stringify(filtre));
         window.location.href = "cart.html";
@@ -67,7 +62,10 @@ for (let i=0; i<deleteItem.length;i++) {
 const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 const recupOrderId = document.querySelector("#orderId");
-        if(envoyerCommande) {
+
+
+    
+       if(envoyerCommande) {
             envoyerCommande.addEventListener("click", function(event) {
                 event.preventDefault();
                 const contact = {
@@ -147,15 +145,18 @@ const recupOrderId = document.querySelector("#orderId");
                             console.log(data);
                             console.log("OrderId")
                             console.log(data.orderId);
-                            console.log(window.location.href);
-                            
-                        });
-                /*
-                window.location = "confirmation.html";
-                */
-            }) 
+                            window.location.href = "confirmation.html?" + data.orderId ;
+                              
+                        });               
+             }) 
         }else {
+            const id = window.location.search;
+            const orderId = id.slice(1);
+            recupOrderId.innerHTML = `${orderId}`;
+            console.log("OrderId du back-end")
+            console.log(recupOrderId);   
         }
+    
     
    
    
