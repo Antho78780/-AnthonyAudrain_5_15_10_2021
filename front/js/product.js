@@ -2,11 +2,11 @@
 const idProduct = new URLSearchParams(window.location.search);
 const _id = idProduct.get("id");
 
-///////////////// AJOUT DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
+///////////////// RECUPERATION DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);
-requete
-.then (reponse => reponse.json())
-.then (product => {
+requete 
+.then (reponse => reponse.json()) /// PROMESSE EN REPONSE JSON
+.then (product => { /// AJOUT DES OPTIONS DU PRODUIT DANS LA PROMESSE
     document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     document.querySelector("#title").innerHTML =`${product.name}`;
     document.querySelector("#price").innerHTML =`${product.price}`;
@@ -15,12 +15,12 @@ requete
     const recupQuantite = document.querySelector('#quantity');
     const sendPanier = document.querySelector("#addToCart");
     const recupColors =  document.querySelector("#colors");
-
+    ///// AJOUT DE LA POSSIBILITE D'AFFICHER L'OPTION AVEC TOUTES LES COULEURS/////////
     product.colors.forEach(color => {
         document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
     });
-      //////////// AJOUT DE l'ELEMENT ADDEVENTLISTENER POUR CLICKER SUR LE BUTTON PANIER POUR ENVOYER LE PRODUIT DANS LE LOCALSTORAGE//////////////////////////////////////
-      
+
+      //////////// ENVOIE DE MON PRODUIT AU PANIER ET AU LOCALSTORAGE////////////
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();
         alert(" Vous avez ajouté l'article " + product.name + " au panier");
