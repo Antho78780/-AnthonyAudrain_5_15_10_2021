@@ -1,17 +1,18 @@
 
-/////////////// recupération du localstorage pour afficher les produits du panier ////////////////////
+/////////////// recupération du localstorage pour afficher les produits du panier dans le console lolg ////////////////////
 const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
 const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
 console.log("Affichage des produits du panier");
  console.log(recupLocalStorage);
 
+ /// récupéation des ID ////
 const recupPrice = document.querySelector("#totalPrice");
 const recupQuantite = document.querySelector("#totalQuantity");
 
 const arrayPrice = [];
 const arrayQuantity = [];
 
-    ///////////// RECUPERATION DE TOUT MES PRODUITS ENVOYER AU LOCALSTORAGE DANS LE PANIER//////////////////
+    ///////////// création d'une boucle qui va me permettre d'affiché les produits envoyé au localStorage dans le panier //////////////////
 for (let i = 0;i<recupLocalStorage.length;i++) {
         let quantite = parseInt(recupLocalStorage[i].quantite);
         let total = recupLocalStorage[i].price * quantite;
@@ -49,19 +50,17 @@ for (let i = 0;i<recupLocalStorage.length;i++) {
            
             
 };
-
-
-
-//// AJOUT LA POSSIBILITE DE SUPPRIMER LE PRODUIT DANS LE PANIER ET DANS LE LOCALSTORAGE/////
+/// récupération de la class deleteItem avec selectorAll pour sélectionner tout les boutons supprimé ////
 const deleteItem = document.querySelectorAll(".deleteItem");
+//// création d'une boucle pour le selectorAll ////
 for (let i=0; i<deleteItem.length;i++) {
     deleteItem[i].addEventListener("click", function(e) {
         e.preventDefault();
         alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier");
         let produitSupp = recupLocalStorage[i].id;
-        const filtre = recupLocalStorage.filter(el => el.id != produitSupp);
+        const filtre = recupLocalStorage.filter(el => el.id != produitSupp); //// méthode filter qui permet de retourner un tableau avec ce qui est demander ////
         console.log(filtre);
-        localStorage.setItem("panier", JSON.stringify(filtre));
+        localStorage.setItem("panier", JSON.stringify(filtre)); //// permet de supprimé le ou les produits dans le localStorage ////
         window.location.href = "cart.html";
     })
 }
@@ -89,7 +88,7 @@ const recupOrderId = document.querySelector("#orderId");
                     contact,
                     products,
                 }
-                ////METHODE REGEX POUR CONTROLER LES INFORMATIONS QUE L'UTILISATEUR RENTRE/////
+                //// Création de 5 functions avec la méthode regex pour controllé les informations de l'utilisateur/////
         
                     function prenom () {
                         const regexPrenom = contact.firstName;
@@ -132,7 +131,7 @@ const recupOrderId = document.querySelector("#orderId");
                         };
                     };
                 
-                ////RECUPERATION DE L'API QUI VA PERMETTRE D'UTILISER LA METHOD POST POUR ENVOYER LE FORMULAIRE AU BACK-END////
+                ////Récupéation de l'api qui va permettre envoyé l'objet objetContactEtProducts au back-end////
                     const requestPost = fetch(`http://localhost:3000/api/products/order`, {
                         method: "POST",
                         body : JSON.stringify(objetContactEtProducts),
@@ -143,7 +142,7 @@ const recupOrderId = document.querySelector("#orderId");
                     })
                         requestPost
                         .then (res => res.json())    
-                        .then (data => { ////UTILISATION DE PROMESSE///
+                        .then (data => { /// Réponse du back-end en envoyant le numéro de commande du produit ///
                             if(prenom() && nom() && email() && ville() && address()) {
                             }
                             else {

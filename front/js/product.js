@@ -1,29 +1,30 @@
-//////////////// CREATION DE l'id DU PRODUIT POUR RENDRE L'ID UNIQUE////////////////////
+//////////////// Utilistation de URLSEARCHPARAMS qui va permettre d'affecter un id au produit en question ////////////////////
 const idProduct = new URLSearchParams(window.location.search);
 const _id = idProduct.get("id");
 
-///////////////// RECUPERATION DE L'API AVEC L'ID POUR AJOUTER TOUTES LES OPTIONS DANS LE PRODUIT EN QUESTION////////////////////
+///////////////// récuperation de l'api en rajoutant la clé ID pour afficher le produit  ////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);
 requete 
-.then (reponse => reponse.json()) /// PROMESSE EN REPONSE JSON
-.then (product => { /// AJOUT DES OPTIONS DU PRODUIT DANS LA PROMESSE
+.then (reponse => reponse.json()) /// Réponse JSON ////
+.then (product => { /// Ajout des informations du produit dans la page produit /////
     document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     document.querySelector("#title").innerHTML =`${product.name}`;
     document.querySelector("#price").innerHTML =`${product.price}`;
     document.querySelector("#description").innerHTML =`${product.description}`;
-
+////// Récupération des ID /////
     const recupQuantite = document.querySelector('#quantity');
     const sendPanier = document.querySelector("#addToCart");
     const recupColors =  document.querySelector("#colors");
-    ///// AJOUT DE LA POSSIBILITE D'AFFICHER L'OPTION AVEC TOUTES LES COULEURS/////////
+    ///// Ajout de la possibilité d'afficher les options de la couleur du produit gràce a une boucle/////////
     product.colors.forEach(color => {
         document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
     });
 
-      //////////// ENVOIE DE MON PRODUIT AU PANIER ET AU LOCALSTORAGE////////////
+      //////////// Récupération de la constante sendPanier pour écouter le click ////////////
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();
         alert(" Vous avez ajouté l'article " + product.name + " au panier");
+        ///// création de l'objet optionProduit ////
         let optionsProduit =  {
             name: product.name,
             img: product.imageUrl,
@@ -32,6 +33,7 @@ requete
             colors:   recupColors.value,
             quantite: recupQuantite.value
         }
+        //// création d'un tableau LocalStorage ////
         let array = [];
         array = JSON.parse(localStorage.getItem("panier"));
         
@@ -51,6 +53,7 @@ requete
             console.log("envoie du array dans le localStorage");
             console.log(array)
     })
+    //// récupération du localStorage envoyé dans le localStorage dans le console log ////
     const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
     console.log("recuperation du LocalStorage");
     console.log(recupLocalStorage);
