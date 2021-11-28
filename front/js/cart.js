@@ -161,7 +161,7 @@ const recupOrderId = document.querySelector("#orderId");
         }else {
             const id = window.location.search;
             const orderId = id.slice(1);
-            recupOrderId.innerHTML = `${orderId}`;
+            recupOrderId.innerHTML = orderId;
             console.log("OrderId du back-end");
             console.log(recupOrderId);   
         }

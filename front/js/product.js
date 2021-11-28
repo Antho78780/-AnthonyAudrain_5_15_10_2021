@@ -23,7 +23,6 @@ requete
       //////////// Récupération de la constante sendPanier pour écouter le click ////////////
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();
-        alert(" Vous avez ajouté l'article " + product.name + " au panier");
         ///// création de l'objet optionProduit ////
         let optionsProduit =  {
             name: product.name,
@@ -39,18 +38,21 @@ requete
         
     
         ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
-            if(array) {
+            if(array && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
                 array = array.filter(el => el.id != optionsProduit.id);
                 array.push(optionsProduit);
-                localStorage.setItem("panier", JSON.stringify(array));                
+                localStorage.setItem("panier", JSON.stringify(array));
+                alert(" Vous avez ajouté l'article " + product.name + " au panier");          
             }
-            else  { 
-                array = [];
+            else if([] &&  optionsProduit.colors != "" && optionsProduit.quantite != "0"){
+                array = []
                 array.push(optionsProduit);
-                optionsProduit.quantite + optionsProduit.quantite;
-                localStorage.setItem("panier", JSON.stringify(array)); 
+                localStorage.setItem("panier", JSON.stringify(array));
+                alert(" Vous avez ajouté l'article " + product.name + " au panier"); 
             }
-            console.log("envoie du array dans le localStorage");
+            else {
+                alert("Vous pouvez pas envoyer votre article au panier")
+            }
             console.log(array)
     })
     //// récupération du localStorage envoyé dans le localStorage dans le console log ////
