@@ -19,7 +19,6 @@ requete
     product.colors.forEach(color => {
         document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
     });
-
       //////////// Récupération de la constante sendPanier pour écouter le click ////////////
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();
@@ -30,35 +29,49 @@ requete
             price: product.price,
             id: product._id,
             colors:   recupColors.value,
-            quantite: recupQuantite.value
+            quantite: parseInt( recupQuantite.value),
         }
+        
         //// création d'un tableau LocalStorage ////
         let array = [];
-        array = JSON.parse(localStorage.getItem("panier"));
-        
-    
-        ////////// AJOUT DE CONDITIONS POUR STOCKER LES PRODUITS DANS LE LOCALSTORAGE//////////////
-            if(array && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
-                array = array.filter(el => el.id != optionsProduit.id);
+        array = JSON.parse(localStorage.getItem("panier"));;
+       
+        ////////// AJOUT DE CONDITIONS POUR STOCKER LESPRODUITS DANS LE LOCALSTORAGE//////////////
+             
+             if(array  && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
+                let produitExisteDeja = array.find(el => el.id == optionsProduit.id);
+                if(produitExisteDeja) {
+                    console.log("incremente le");
+                    array.forEach(el => {
+                       el.quantite += optionsProduit.quantite;
+                    });
+                    array.push(optionsProduit);
+                    console.log(array)
+                    localStorage.setItem("panier", JSON.stringify(array));
+                }
+                else {
+                    console.log("pas besoin")
+                }                                                                                                                                                                   
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array));
-                alert(" Vous avez ajouté l'article " + product.name + " au panier");          
-            }
-            else if([] &&  optionsProduit.colors != "" && optionsProduit.quantite != "0"){
-                array = []
+                alert(" Vous avez ajouté l'article " + product.name + " au panier");  
+             }
+             else if([] &&  optionsProduit.colors != "" && optionsProduit.quantite != "0") {
+                array = [];
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array));
-                alert(" Vous avez ajouté l'article " + product.name + " au panier"); 
-            }
-            else {
-                alert("Vous pouvez pas envoyer votre article au panier")
-            }
-            console.log(array)
+                alert(" Vous avez ajouté l'article " + product.name + " au panier");
+             }
+             else {
+                 alert("Vous ne pouvez pas envoyer votre article")
+             }
     })
     //// récupération du localStorage envoyé dans le localStorage dans le console log ////
+    /*
     const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
     console.log("recuperation du LocalStorage");
     console.log(recupLocalStorage);
+    */
 })
     
     
