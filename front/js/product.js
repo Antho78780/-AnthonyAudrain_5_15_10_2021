@@ -43,13 +43,13 @@ requete
                 if(produitExisteDeja) {
                     let resultQuantite = [];
                     for (let i of array) {
-                        resultQuantite = i.quantite += optionsProduit.quantite
+                        if(optionsProduit.id == i.id)
+                            resultQuantite = i.quantite += optionsProduit.quantite
                     }
                     optionsProduit.quantite = resultQuantite;
-                    array.push(optionsProduit);
                     array = array.filter(el => el.id != optionsProduit.id)
-                    localStorage.setItem("panier", JSON.stringify(array));
-                    console.log(array);
+                }
+                else {
                 }                                                                                                                                                            
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array));
@@ -61,16 +61,21 @@ requete
                 localStorage.setItem("panier", JSON.stringify(array));
                 alert(" Vous avez ajouté l'article " + product.name + " au panier");
              }
-             else {
-                 alert("Vous ne pouvez pas envoyer votre article")
+             else if(optionsProduit.colors == "" && optionsProduit.quantite != "0") {
+                 alert("Choissisez une couleur pour ajouté votre article au panier");
              }
+             else if(optionsProduit.quantite = "0" && optionsProduit.colors != "") {
+                 alert("Choissisez la quantité de l'article pour l'ajouté au panier")
+             }
+             else {
+                 alert("L'article n'a pas de couleurs ni de quantité vous ne pouvez pas l'ajouté au panier")
+             }
+
     })
     //// récupération du localStorage envoyé dans le localStorage dans le console log ////
-    /*
     const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
     console.log("recuperation du LocalStorage");
     console.log(recupLocalStorage);
-    */
 })
     
     

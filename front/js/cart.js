@@ -143,19 +143,34 @@ const recupOrderId = document.querySelector("#orderId");
                         requestPost
                         .then (res => res.json())    
                         .then (data => { /// Réponse du back-end en envoyant le numéro de commande du produit ///
-                            if(prenom() && nom() && email() && ville() && address()) {
+                            if(prenom() == false && nom() == false && address () == false && ville() == false && email() == false) {
+                                alert("Tout les champs doivent étre remplis ")
                             }
-                            else {
-                            alert("informations Incorrect")
-                                data = undefined;
-                                console.log("Le formulaire ne peut pas étre envoyer avec des mauvaises informations");
+                            else if(prenom() == false || nom() == false || address () == false || ville() == false || email() == false) {
+                                if(prenom() == false) {
+                                    alert("Votre prenom n'est pas correct")
+                                }
+                                if(nom() == false) {
+                                    alert("Votre nom n'est pas correct")
+                                }
+                                if(address() == false) {
+                                    alert("Votre adresse n'est pas correct")
+                                }
+                                if(ville() == false) {
+                                    alert("Votre ville n'est pas correct")
+                                }
+                                if(email() == false) {
+                                    alert("Votre email n'est pas correct")
+                                }
                             }
                             console.log("Réponse du back-end");
                             console.log(data);
                             console.log("OrderId");
                             console.log(data.orderId);
-                            window.location.href = "confirmation.html?" + data.orderId ;
-                              
+                            if(data.orderId){
+                                window.location.href = "confirmation.html?" + data.orderId ; 
+                            }
+                            
                         });               
              }) 
         }else {
