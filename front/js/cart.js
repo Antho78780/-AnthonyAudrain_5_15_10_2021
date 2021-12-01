@@ -162,15 +162,15 @@ const recupOrderId = document.querySelector("#orderId");
                                 if(email() == false) {
                                     alert("Votre email n'est pas correct")
                                 }
+                                console.log("Les articles ne peuvent pas étre envoyé")
+                                data.orderId = null;
                             }
                             console.log("Réponse du back-end");
                             console.log(data);
-                            console.log("OrderId");
-                            console.log(data.orderId);
-                            if(data.orderId){
+                            if(data.orderId && recupLocalStorage.length != 0){
                                 window.location.href = "confirmation.html?" + data.orderId ; 
+                            }else {
                             }
-                            
                         });               
              }) 
         }else {
