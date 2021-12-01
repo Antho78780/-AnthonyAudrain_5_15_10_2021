@@ -38,20 +38,19 @@ requete
        
         ////////// AJOUT DE CONDITIONS POUR STOCKER LESPRODUITS DANS LE LOCALSTORAGE//////////////
              
-             if(array  && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
+             if(array && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
                 let produitExisteDeja = array.find(el => el.id == optionsProduit.id);
                 if(produitExisteDeja) {
-                    console.log("incremente le");
-                    array.forEach(el => {
-                       el.quantite += optionsProduit.quantite;
-                    });
+                    let resultQuantite = [];
+                    for (let i of array) {
+                        resultQuantite = i.quantite += optionsProduit.quantite
+                    }
+                    optionsProduit.quantite = resultQuantite;
                     array.push(optionsProduit);
-                    console.log(array)
+                    array = array.filter(el => el.id != optionsProduit.id)
                     localStorage.setItem("panier", JSON.stringify(array));
-                }
-                else {
-                    console.log("pas besoin")
-                }                                                                                                                                                                   
+                    console.log(array);
+                }                                                                                                                                                            
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array));
                 alert(" Vous avez ajouté l'article " + product.name + " au panier");  
