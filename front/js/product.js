@@ -42,14 +42,16 @@ requete
                 let produitExisteDeja = array.find(el => el.id == optionsProduit.id);
                 if(produitExisteDeja) {
                     let resultQuantite = [];
+                    let resultQuantiteMoins = [];
                     for (let i of array) {
                         if(optionsProduit.id == i.id)
-                            resultQuantite = i.quantite += optionsProduit.quantite
+                            resultQuantite = i.quantite += optionsProduit.quantite;
+                            resultQuantiteMoins = i.quantite -= optionsProduit.quantite;
                     }
-                    optionsProduit.quantite = resultQuantite;
-                    array = array.filter(el => el.id != optionsProduit.id)
-                }
-                else {
+                    
+                        optionsProduit.quantite = resultQuantite;
+                        array = array.filter(el => el.id != optionsProduit.id)
+                }else {
                 }                                                                                                                                                            
                 array.push(optionsProduit);
                 localStorage.setItem("panier", JSON.stringify(array));

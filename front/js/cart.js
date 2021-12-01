@@ -170,6 +170,7 @@ const recupOrderId = document.querySelector("#orderId");
                             if(data.orderId && recupLocalStorage.length != 0){
                                 window.location.href = "confirmation.html?" + data.orderId ; 
                             }else {
+                                alert("Vous n'avez pas d'article dans le panier")
                             }
                         });               
              }) 
