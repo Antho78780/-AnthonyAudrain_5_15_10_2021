@@ -1,14 +1,14 @@
 
 /////////////// recupération du localstorage pour afficher les produits du panier dans le console lolg ////////////////////
 const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
-const additionPrixEtQuantite = (accumulator, currentValue) => accumulator + currentValue;
+const reducer = (accumulator, currentValue) => accumulator + currentValue;
 console.log("Affichage des produits du panier");
  console.log(recupLocalStorage);
 
  /// récupéation des ID ////
 const recupPrice = document.querySelector("#totalPrice");
 const recupQuantite = document.querySelector("#totalQuantity");
-
+/// création de 2 tableaux vides , un tableau prix et un  tableau quantité pour additionné les prix et la quantité
 const arrayPrice = [];
 const arrayQuantity = [];
 
@@ -16,8 +16,8 @@ const arrayQuantity = [];
 for (let i = 0;i<recupLocalStorage.length;i++) {
         let quantite = parseInt(recupLocalStorage[i].quantite);
         let total = recupLocalStorage[i].price * quantite;
-        arrayQuantity.push(quantite);
-        arrayPrice.push(total);
+        arrayQuantity.push(quantite); /// push la quantité  dans mon tableau vide ////
+        arrayPrice.push(total);/// push le prix dans mon tableau vide /////
         const recupArticle = document.querySelector("#cart__items");
         if(recupArticle) {
             recupArticle.innerHTML +=`<article class="cart__item"data-id="${recupLocalStorage[i].id}"><div class="cart__item__img"><img src="${recupLocalStorage[i].img}" 
@@ -28,16 +28,18 @@ for (let i = 0;i<recupLocalStorage.length;i++) {
         }
         else {
         };
-        const totalPrice = arrayPrice.reduce(additionPrixEtQuantite);
-        const totalQuantite = arrayQuantity.reduce(additionPrixEtQuantite);
 
+        const totalPrice = arrayPrice.reduce(reducer);
+        const totalQuantite = arrayQuantity.reduce(reducer);
+        ///// implantation des constantes dans le code HTML pour mettre à jour la quantité total et le prix total ///
         if(recupPrice && recupQuantite) {
             recupPrice.innerHTML = `${totalPrice}`;
             recupQuantite.innerHTML = `${totalQuantite}`
         }else {
         };
         const recupItemQuantity = document.querySelectorAll(".itemQuantity");
-       
+
+        ////  création d'une boucle pour modifié la quantité des articles dans le panier ///
             for (let i = 0; i < recupItemQuantity.length;i++) {
                 recupItemQuantity[i].addEventListener("click", function(e) {
                     e.preventDefault();
@@ -50,17 +52,17 @@ for (let i = 0;i<recupLocalStorage.length;i++) {
            
             
 };
-/// récupération de la class deleteItem avec selectorAll pour sélectionner tout les boutons supprimé ////
 const deleteItem = document.querySelectorAll(".deleteItem");
-//// création d'une boucle pour le selectorAll ////
+
+//// création d'une boucle pour supprimé les articles à partir du panier ////
 for (let i=0; i<deleteItem.length;i++) {
     deleteItem[i].addEventListener("click", function(e) {
         e.preventDefault();
         alert(" Vous avez supprimé l'article " + recupLocalStorage[i].name + " du panier");
         let produitSupp = recupLocalStorage[i].id;
-        const filtre = recupLocalStorage.filter(el => el.id != produitSupp); //// méthode filter qui permet de retourner un tableau avec ce qui est demander ////
+        const filtre = recupLocalStorage.filter(el => el.id != produitSupp); 
         console.log(filtre);
-        localStorage.setItem("panier", JSON.stringify(filtre)); //// permet de supprimé le ou les produits dans le localStorage ////
+        localStorage.setItem("panier", JSON.stringify(filtre)); 
         window.location.href = "cart.html";
     })
 }
@@ -68,11 +70,10 @@ const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 const recupOrderId = document.querySelector("#orderId");
 
-
-    ///////ENVOIE DU FORMULAIRE AU BACK-END POUR RECEVOIR l'ORDER-ID////
        if(envoyerCommande) {
             envoyerCommande.addEventListener("click", function(event) {
                 event.preventDefault();
+                //// création de l'objet contact ////
                 const contact = {
                     firstName: recupFormulaire[0].value,
                     lastName: recupFormulaire[1].value,
@@ -80,15 +81,17 @@ const recupOrderId = document.querySelector("#orderId");
                     city: recupFormulaire[3].value,
                     email: recupFormulaire[4].value,
                 };
+                //// création du tableau product qui va stocker l'id de mon produit ////
                 const products = []; 
                 for (let recupId of recupLocalStorage) {
                     products.push(recupId.id);
                 }
+                //// rassemblement de mon objet contact et de mon tableau product comme c'est demandé pour les envoyés au back-end ////
                 const objetContactEtProducts = {
                     contact,
                     products,
                 }
-                //// Création de 5 functions avec la méthode regex pour controllé les informations de l'utilisateur/////
+                //// Création de 5 functions avec la méthode regex pour controlé les informations de l'utilisateur/////
         
                     function prenom () {
                         const regexPrenom = contact.firstName;
@@ -132,7 +135,7 @@ const recupOrderId = document.querySelector("#orderId");
                         };
                     };
                 
-                ////Récupéation de l'api qui va permettre envoyé l'objet objetContactEtProducts au back-end////
+                ////Récupéation de l'api avec la méthode post qui va permettre d'envoyer mon objet au back-end////
                     const requestPost = fetch(`http://localhost:3000/api/products/order`, {
                         method: "POST",
                         body : JSON.stringify(objetContactEtProducts),

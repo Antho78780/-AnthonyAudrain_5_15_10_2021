@@ -5,8 +5,8 @@ const _id = idProduct.get("id");
 ///////////////// récuperation de l'api en rajoutant la clé ID pour afficher le produit  ////////////////////
 const requete = fetch(`http://localhost:3000/api/products/${_id}`);
 requete 
-.then (reponse => reponse.json()) /// Réponse JSON ////
-.then (product => { /// Ajout des informations du produit dans la page produit /////
+.then (res => res.json()) 
+.then (product => { /// Ajout des informations du produit dans la page produit gràce à la methode then /////
     document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     document.querySelector("#title").innerHTML =`${product.name}`;
     document.querySelector("#price").innerHTML =`${product.price}`;
