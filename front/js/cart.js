@@ -96,6 +96,7 @@ const recupOrderId = document.querySelector("#orderId");
                             return true;
                         }else {
                             return false;
+                            
                         };
                     };
                     function nom () {
@@ -143,34 +144,36 @@ const recupOrderId = document.querySelector("#orderId");
                         requestPost
                         .then (res => res.json())    
                         .then (data => { /// Réponse du back-end en envoyant le numéro de commande du produit ///
-                            if(prenom() == false && nom() == false && address () == false && ville() == false && email() == false) {
-                                alert("Tout les champs doivent étre remplis ")
+                            if(prenom() && nom() && address () && ville() && email() && recupLocalStorage.length != 0) {
                             }
-                            else if(prenom() == false || nom() == false || address () == false || ville() == false || email() == false) {
+                            else if(recupLocalStorage.length == 0) {
+                                alert("Votre panier est vide");
+                                data.orderId == null;
+                            }
+                            else if(prenom() == false && nom() == false && address () == false && ville() == false && email() == false) {
+                                alert("Plusieurs champs incorrects");
+                                data.orderId == null;
+                            }
+                            else if(prenom() == false || nom() == false || address () == false || ville() == false || email() == false){
                                 if(prenom() == false) {
-                                    alert("Votre prenom n'est pas correct")
+                                    alert("le prenom n'est pas valide");
                                 }
                                 if(nom() == false) {
-                                    alert("Votre nom n'est pas correct")
+                                    alert("le nom n'est pas valide");
                                 }
                                 if(address() == false) {
-                                    alert("Votre adresse n'est pas correct")
+                                    alert("l'adresse n'est pas valide");
                                 }
-                                if(ville() == false) {
-                                    alert("Votre ville n'est pas correct")
+                                if(ville() == false){
+                                    alert("La ville n'est pas valide");
                                 }
                                 if(email() == false) {
-                                    alert("Votre email n'est pas correct")
+                                    alert("l'email n'est pas valide");
                                 }
-                                console.log("Les articles ne peuvent pas étre envoyé")
-                                data.orderId = null;
+                                data.orderId == null;
                             }
-                            console.log("Réponse du back-end");
-                            console.log(data);
-                            if(data.orderId && recupLocalStorage.length != 0){
+                            else if(recupLocalStorage.length != 0 && data.orderId){
                                 window.location.href = "confirmation.html?" + data.orderId ; 
-                            }else {
-                                alert("Vous n'avez pas d'article dans le panier")
                             }
                         });               
              }) 
