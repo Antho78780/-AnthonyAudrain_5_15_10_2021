@@ -16,9 +16,9 @@ requete
     const sendPanier = document.querySelector("#addToCart");
     const recupColors =  document.querySelector("#colors");
     ///// Ajout de la possibilité d'afficher les options de la couleur du produit gràce a une boucle/////////
-    product.colors.forEach(color => {
+    for (let color of product.colors) {
         document.querySelector("#colors").innerHTML += `<option value="${color}">${color}</option>`
-    });
+    }
       //////////// Récupération de la constante sendPanier pour écouter le click ////////////
     sendPanier.addEventListener("click", function(event) {
         event.preventDefault();

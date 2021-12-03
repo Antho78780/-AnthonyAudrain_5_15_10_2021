@@ -5,7 +5,7 @@ requeteGet
 .then(productArray => {
     console.log("Affichage de tout les produits")
     console.log(productArray);
-    ///// Insertion des articles ////
+    ///// création d'une boucle pour inserer du code HTML  ////
     for (let product of productArray) {
         document.querySelector('#items').innerHTML +=
         `<a href="./product.html?id=${product._id}"><article><img src="${product.imageUrl}" alt="${product.altTxt}">
