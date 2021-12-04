@@ -135,7 +135,7 @@ if(envoyerCommande) {
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
-			},
+			}
 		})
 		requestPost
 		.then (res => res.json())    
