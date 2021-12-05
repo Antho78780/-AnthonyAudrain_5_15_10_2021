@@ -1,53 +1,50 @@
 
 /////////////// recupération du localstorage pour afficher les produits du panier dans le console lolg ////////////////////
 const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
+const panier = recupLocalStorage;
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 console.log("Affichage des produits du panier");
 console.log(recupLocalStorage);
-
  /// récupéation des ID ////
 const recupPrice = document.querySelector("#totalPrice");
 const recupQuantite = document.querySelector("#totalQuantity");
 /// création de 2 tableaux vides , un tableau prix et un  tableau quantité pour additionné les prix et la quantité
 const arrayPrice = [];
 const arrayQuantity = [];
-
-    ///////////// création d'une boucle qui va me permettre d'affiché les produits envoyé au localStorage dans le panier //////////////////
-for (let panier of recupLocalStorage) {
-    let quantite = parseInt(panier.quantite);
-    let total = panier.price * quantite;
+///////////// création d'une boucle qui va me permettre d'affiché les produits envoyé au localStorage dans le panier //////////////////
+for (let i = 0; i < panier.length;i++) {
+    let quantite = parseInt(panier[i].quantite);
+    let total = panier[i].price * quantite;
     arrayQuantity.push(quantite); /// push la quantité  dans mon tableau vide ////
     arrayPrice.push(total);/// push le prix dans mon tableau vide /////
     const recupArticle = document.querySelector("#cart__items");
     if(recupArticle) {
-        recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier.id}"><div class="cart__item__img"><img src="${panier.img}" 
-        alt="${panier.altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier.name}</h2>
+        recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier[i].id}"><div class="cart__item__img"><img src="${panier[i].img}" 
+        alt="${panier[i].altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier[i].name}</h2>
         <p class ="total">${total}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}"></div><div class="cart__item__content__settings__delete">
         <p class="deleteItem">Supprimer</p></div></div></div></article`;
-    }else {
-    };
+    }
     const totalPrice = arrayPrice.reduce(reducer);
     const totalQuantite = arrayQuantity.reduce(reducer);
     ///// implantation des constantes dans le code HTML pour mettre à jour la quantité total et le prix total ///
     if(recupPrice && recupQuantite) {
         recupPrice.innerHTML = `${totalPrice}`;
         recupQuantite.innerHTML = `${totalQuantite}`
-    }else {
-    };
+    }
     const recupItemQuantity = document.querySelectorAll(".itemQuantity");
 	const deleteItem = document.querySelectorAll(".deleteItem");
-
-    ////  création d'une boucle pour modifié la quantité des articles dans le panier ///
-    for (let itemQuantity of recupItemQuantity) {
-        itemQuantity.addEventListener("click", function(e) {
-            e.preventDefault();
-            const valueQuantite = itemQuantity.value;
-			quantite = valueQuantite;
-			panier.quantite = quantite;
-			localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
-        })
-    }  
+		////  création d'une boucle pour modifié la quantité des articles dans le panier ///
+			for (let i = 0; i < recupItemQuantity.length;i++) {
+				recupItemQuantity[i].addEventListener("click", function(e) {
+					e.preventDefault();
+					const valueQuantite = recupItemQuantity[i].value;
+					quantite = valueQuantite;
+					panier[i].quantite = parseInt(valueQuantite);
+					localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
+				})
+			}  
+				
 	//// création d'une boucle pour supprimé les articles à partir du panier ////
 	for (let itemDelete of deleteItem) {
 		itemDelete.addEventListener("click", function(e) {
@@ -63,7 +60,6 @@ for (let panier of recupLocalStorage) {
 const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 const recupOrderId = document.querySelector("#orderId");
-
 if(envoyerCommande) {
 	envoyerCommande.addEventListener("click", function(event) {
 		event.preventDefault();
@@ -79,12 +75,12 @@ if(envoyerCommande) {
 		const products = []; 
 		for (let productId of recupLocalStorage) {
 			products.push(productId.id);
-		}
+		};
 		//// rassemblement de mon objet contact et de mon tableau product comme c'est demandé pour les envoyés au back-end ////
 		const objetContactEtProducts = {
 			contact,
 			products,
-		}
+		};
 		//// Création de 5 functions avec la méthode regex pour controlé les informations de l'utilisateur/////
 		function prenom () {
 			const regexPrenom = contact.firstName;
@@ -127,7 +123,6 @@ if(envoyerCommande) {
 				return false;
 			};
 		};
-		
 		////Récupéation de l'api avec la méthode post qui va permettre d'envoyer mon objet au back-end////
 		const requestPost = fetch(`http://localhost:3000/api/products/order`, {
 			method: "POST",
