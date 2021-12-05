@@ -4,7 +4,7 @@ const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
 const panier = recupLocalStorage;
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 console.log("Affichage des produits du panier");
-console.log(recupLocalStorage);
+console.log(recupLocalStorage)
  /// récupéation des ID ////
 const recupPrice = document.querySelector("#totalPrice");
 const recupQuantite = document.querySelector("#totalQuantity");
@@ -21,12 +21,12 @@ for (let i = 0; i < panier.length;i++) {
     if(recupArticle) {
         recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier[i].id}"><div class="cart__item__img"><img src="${panier[i].img}" 
         alt="${panier[i].altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier[i].name}</h2>
-        <p class ="total">${total}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
+        <p id ="total">${total}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}"></div><div class="cart__item__content__settings__delete">
         <p class="deleteItem">Supprimer</p></div></div></div></article`;
     }
-    const totalPrice = arrayPrice.reduce(reducer);
-    const totalQuantite = arrayQuantity.reduce(reducer);
+    let totalPrice = arrayPrice.reduce(reducer);
+    let totalQuantite = arrayQuantity.reduce(reducer);
     ///// implantation des constantes dans le code HTML pour mettre à jour la quantité total et le prix total ///
     if(recupPrice && recupQuantite) {
         recupPrice.innerHTML = `${totalPrice}`;
@@ -34,7 +34,10 @@ for (let i = 0; i < panier.length;i++) {
     }
     const recupItemQuantity = document.querySelectorAll(".itemQuantity");
 	const deleteItem = document.querySelectorAll(".deleteItem");
+	const recupTotal = document.querySelectorAll("#total");
+	
 		////  création d'une boucle pour modifié la quantité des articles dans le panier ///
+		for (let i = 0; i < recupTotal.length;i++) {
 			for (let i = 0; i < recupItemQuantity.length;i++) {
 				recupItemQuantity[i].addEventListener("click", function(e) {
 					e.preventDefault();
@@ -42,16 +45,17 @@ for (let i = 0; i < panier.length;i++) {
 					quantite = valueQuantite;
 					panier[i].quantite = parseInt(valueQuantite);
 					localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
+					total = panier[i].price * valueQuantite;
+					recupTotal[i].innerHTML = total + "€";	
 				})
-			}  
-				
+			} 
+		} 
 	//// création d'une boucle pour supprimé les articles à partir du panier ////
 	for (let itemDelete of deleteItem) {
 		itemDelete.addEventListener("click", function(e) {
 			e.preventDefault();
 			alert(" Vous avez supprimé l'article " + panier.name + " du panier");
-			let produitSupp = panier.id;
-			const filtre = recupLocalStorage.filter(el => el.id != produitSupp); 
+			const filtre = panier.filter(el => el.id != panier[i].id); 
 			localStorage.setItem("panier", JSON.stringify(filtre)); 
 			window.location.href = "cart.html";
 		})
