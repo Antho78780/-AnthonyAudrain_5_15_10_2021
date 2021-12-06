@@ -34,27 +34,29 @@ for (let i = 0; i < panier.length;i++) {
     }
     const recupItemQuantity = document.querySelectorAll(".itemQuantity");
 	const deleteItem = document.querySelectorAll(".deleteItem");
-	const recupTotal = document.querySelectorAll("#total");
-	
+	const recupTotalPriceDirect = document.querySelectorAll("#total");
 		////  création d'une boucle pour modifié la quantité des articles dans le panier ///
-		for (let i = 0; i < recupTotal.length;i++) {
+		
 			for (let i = 0; i < recupItemQuantity.length;i++) {
-				recupItemQuantity[i].addEventListener("click", function(e) {
-					e.preventDefault();
-					const valueQuantite = recupItemQuantity[i].value;
-					quantite = valueQuantite;
-					panier[i].quantite = parseInt(valueQuantite);
-					localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
-					total = panier[i].price * valueQuantite;
-					recupTotal[i].innerHTML = total + "€";	
-				})
+				for (let i = 0; i < recupTotalPriceDirect.length;i++) {
+					recupItemQuantity[i].addEventListener("click", function(e) {
+						e.preventDefault();
+						const valueQuantite = recupItemQuantity[i].value;
+						const numberQuantity = parseInt(valueQuantite);
+						quantite = numberQuantity;
+						panier[i].quantite = numberQuantity;
+						localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
+						total = panier[i].price * numberQuantity;
+						recupTotalPriceDirect[i].innerHTML = total + "€";
+					})
+				}
+				
 			} 
-		} 
 	//// création d'une boucle pour supprimé les articles à partir du panier ////
 	for (let itemDelete of deleteItem) {
 		itemDelete.addEventListener("click", function(e) {
 			e.preventDefault();
-			alert(" Vous avez supprimé l'article " + panier.name + " du panier");
+			alert(" Vous avez supprimé l'article " + panier[i].name + " du panier");
 			const filtre = panier.filter(el => el.id != panier[i].id); 
 			localStorage.setItem("panier", JSON.stringify(filtre)); 
 			window.location.href = "cart.html";
