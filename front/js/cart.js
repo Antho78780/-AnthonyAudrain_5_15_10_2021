@@ -1,10 +1,8 @@
 
 /////////////// recupération du localstorage pour afficher les produits du panier dans le console lolg ////////////////////
-const recupLocalStorage = JSON.parse(localStorage.getItem("panier"));
-const panier = recupLocalStorage;
+const panier = JSON.parse(localStorage.getItem("panier"));
 const reducer = (accumulator, currentValue) => accumulator + currentValue;
 console.log("Affichage des produits du panier");
-console.log(recupLocalStorage)
  /// récupéation des ID ////
 const recupPrice = document.querySelector("#totalPrice");
 const recupQuantite = document.querySelector("#totalQuantity");
@@ -14,53 +12,53 @@ const arrayQuantity = [];
 ///////////// création d'une boucle qui va me permettre d'affiché les produits envoyé au localStorage dans le panier //////////////////
 for (let i = 0; i < panier.length;i++) {
     let quantite = parseInt(panier[i].quantite);
-    let total = panier[i].price * quantite;
-    arrayQuantity.push(quantite); /// push la quantité  dans mon tableau vide ////
-    arrayPrice.push(total);/// push le prix dans mon tableau vide /////
+    let totalItem = panier[i].price * quantite;
     const recupArticle = document.querySelector("#cart__items");
     if(recupArticle) {
         recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier[i].id}"><div class="cart__item__img"><img src="${panier[i].img}" 
         alt="${panier[i].altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier[i].name}</h2>
-        <p id ="total">${total}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
+        <p class="total">${totalItem}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}"></div><div class="cart__item__content__settings__delete">
         <p class="deleteItem">Supprimer</p></div></div></div></article`;
     }
-    let totalPrice = arrayPrice.reduce(reducer);
+    const recupItemQuantity = document.querySelectorAll(".itemQuantity");
+	const deleteItem = document.querySelectorAll(".deleteItem");
+	const recupTotalPriceDirect = document.querySelectorAll(".total");
+	
+	changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem);
+
+	////  création d'une boucle pour modifié la quantité des articles dans le panier ///
+	recupItemQuantity[i].addEventListener("click", function(e) {
+		e.preventDefault();
+		const valueQuantite = recupItemQuantity[i].value;
+		const numberQuantity = parseInt(valueQuantite);			
+		panier[i].quantite = numberQuantity;
+		localStorage.setItem("panier", JSON.stringify(panier));
+		totalItem = panier[i].price * numberQuantity;
+		recupTotalPriceDirect[i].innerHTML = totalItem + "€";
+		///// retirer des arrays les valeurs avant changements ////
+		changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem);
+	})
+	//// création d'une boucle pour supprimé les articles à partir du panier ////
+	deleteItem[i].addEventListener("click", function(e) {
+		e.preventDefault();
+		alert(" Vous avez supprimé l'article " + panier[i].name + " du panier");
+		const filtre = panier.filter(el => el.id != panier[i].id); 
+		localStorage.setItem("panier", JSON.stringify(filtre)); 
+		window.location.href = "cart.html";
+	})  
+};
+function changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem) {
+	arrayQuantity.push(quantite); /// push la quantité  dans mon tableau vide ////
+    arrayPrice.push(totalItem);/// push le prix dans mon tableau vide /////
+	let totalPrice = arrayPrice.reduce(reducer);
     let totalQuantite = arrayQuantity.reduce(reducer);
     ///// implantation des constantes dans le code HTML pour mettre à jour la quantité total et le prix total ///
     if(recupPrice && recupQuantite) {
         recupPrice.innerHTML = `${totalPrice}`;
         recupQuantite.innerHTML = `${totalQuantite}`
-    }
-    const recupItemQuantity = document.querySelectorAll(".itemQuantity");
-	const deleteItem = document.querySelectorAll(".deleteItem");
-	const recupTotalPriceDirect = document.querySelectorAll("#total");
-	////  création d'une boucle pour modifié la quantité des articles dans le panier ///
-	for (let i = 0; i < recupItemQuantity.length;i++) {
-		for (let i = 0; i < recupTotalPriceDirect.length;i++) {
-			recupItemQuantity[i].addEventListener("click", function(e) {
-				e.preventDefault();
-				const valueQuantite = recupItemQuantity[i].value;
-				const numberQuantity = parseInt(valueQuantite);
-				quantite = numberQuantity;
-				panier[i].quantite = numberQuantity;
-				localStorage.setItem("panier", JSON.stringify(recupLocalStorage));
-				total = panier[i].price * numberQuantity;
-				recupTotalPriceDirect[i].innerHTML = total + "€";
-			})
-		}
-	} 
-	//// création d'une boucle pour supprimé les articles à partir du panier ////
-	for (let itemDelete of deleteItem) {
-		itemDelete.addEventListener("click", function(e) {
-			e.preventDefault();
-			alert(" Vous avez supprimé l'article " + panier[i].name + " du panier");
-			const filtre = panier.filter(el => el.id != panier[i].id); 
-			localStorage.setItem("panier", JSON.stringify(filtre)); 
-			window.location.href = "cart.html";
-		})
-	}          
-};
+    }      
+}
 const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 const recupOrderId = document.querySelector("#orderId");
@@ -77,7 +75,7 @@ if(envoyerCommande) {
 		};
 		//// création du tableau product qui va stocker l'id de mon produit ////
 		const products = []; 
-		for (let productId of recupLocalStorage) {
+		for (let productId of panier) {
 			products.push(productId.id);
 		};
 		//// rassemblement de mon objet contact et de mon tableau product comme c'est demandé pour les envoyés au back-end ////
@@ -139,10 +137,10 @@ if(envoyerCommande) {
 		requestPost
 		.then (res => res.json())    
 		.then (data => { /// Réponse du back-end en envoyant le numéro de commande du produit ///
-			if(prenom() && nom() && address () && ville() && email() && recupLocalStorage.length != 0) {
+			if(prenom() && nom() && address () && ville() && email() && panier.length != 0) {
 				window.location.href = "confirmation.html?" + data.orderId; //// envoie du numero de commande de l'article dans l'url /// 
 			}
-			else if(recupLocalStorage.length == 0) {
+			else if(panier.length == 0) {
 				alert("Votre panier est vide");
 				data.orderId == null;
 			}
