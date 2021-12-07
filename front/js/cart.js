@@ -1,64 +1,73 @@
-
-/////////////// recupération du localstorage pour afficher les produits du panier dans le console lolg ////////////////////
+/////////////// recupération du localstorage pour afficher les produits du panier dans le console log ////////////////////
 const panier = JSON.parse(localStorage.getItem("panier"));
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
+const reducer = (accumulator, currentValue) => accumulator + currentValue; ////
 console.log("Affichage des produits du panier");
- /// récupéation des ID ////
-const recupPrice = document.querySelector("#totalPrice");
-const recupQuantite = document.querySelector("#totalQuantity");
 /// création de 2 tableaux vides , un tableau prix et un  tableau quantité pour additionné les prix et la quantité
-const arrayPrice = [];
-const arrayQuantity = [];
+let arrayTotalPrice = [];
+let arrayTotalQuantity = [];
 ///////////// création d'une boucle qui va me permettre d'affiché les produits envoyé au localStorage dans le panier //////////////////
-for (let i = 0; i < panier.length;i++) {
-    let quantite = parseInt(panier[i].quantite);
-    let totalItem = panier[i].price * quantite;
+panier.forEach(produit => {
+	console.log(produit);
+    const quantite = parseInt(produit.quantite);
+	const totalQuantityPrice = quantite * produit.price;
+
+	arrayTotalPrice.push(totalQuantityPrice);
+	let totalPrice = arrayTotalPrice.reduce(reducer);
+	arrayTotalQuantity.push(quantite);
+	let totalQuantity = arrayTotalQuantity.reduce(reducer)
+
     const recupArticle = document.querySelector("#cart__items");
     if(recupArticle) {
-        recupArticle.innerHTML +=`<article class="cart__item"data-id="${panier[i].id}"><div class="cart__item__img"><img src="${panier[i].img}" 
-        alt="${panier[i].altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${panier[i].name}</h2>
-        <p class="total">${totalItem}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
+        recupArticle.innerHTML +=`<article class="cart__item"data-id="${produit.id}"><div class="cart__item__img"><img src="${produit.img}" 
+        alt="${produit.altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${produit.name}</h2>
+        <p class="total">${totalQuantityPrice}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
         <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}"></div><div class="cart__item__content__settings__delete">
-        <p class="deleteItem">Supprimer</p></div></div></div></article`;
-    }
-    const recupItemQuantity = document.querySelectorAll(".itemQuantity");
-	const deleteItem = document.querySelectorAll(".deleteItem");
-	const recupTotalPriceDirect = document.querySelectorAll(".total");
-	
-	changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem);
+     	<p class="deleteItem">Supprimer</p></div></div></div></article`;
+	}
+	const recupPrice = document.querySelector("#totalPrice");
+	const recupQuantite = document.querySelector("#totalQuantity");
 
-	////  création d'une boucle pour modifié la quantité des articles dans le panier ///
-	recupItemQuantity[i].addEventListener("click", function(e) {
-		e.preventDefault();
-		const valueQuantite = recupItemQuantity[i].value;
-		const numberQuantity = parseInt(valueQuantite);			
-		panier[i].quantite = numberQuantity;
-		localStorage.setItem("panier", JSON.stringify(panier));
-		totalItem = panier[i].price * numberQuantity;
-		recupTotalPriceDirect[i].innerHTML = totalItem + "€";
-		///// retirer des arrays les valeurs avant changements ////
-		changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem);
-	})
-	//// création d'une boucle pour supprimé les articles à partir du panier ////
-	deleteItem[i].addEventListener("click", function(e) {
-		e.preventDefault();
-		alert(" Vous avez supprimé l'article " + panier[i].name + " du panier");
-		const filtre = panier.filter(el => el.id != panier[i].id); 
-		localStorage.setItem("panier", JSON.stringify(filtre)); 
-		window.location.href = "cart.html";
-	})  
-};
-function changePriceQuantity(recupPrice,recupQuantite,arrayPrice,arrayQuantity,quantite,totalItem) {
-	arrayQuantity.push(quantite); /// push la quantité  dans mon tableau vide ////
-    arrayPrice.push(totalItem);/// push le prix dans mon tableau vide /////
-	let totalPrice = arrayPrice.reduce(reducer);
-    let totalQuantite = arrayQuantity.reduce(reducer);
+	if(recupPrice && recupQuantite) {
+		recupPrice.innerHTML = totalPrice;
+		recupQuantite.innerHTML = totalQuantity;
+	}
+	const recupItemQuantity = document.querySelectorAll(".itemQuantity");
+	const recupTotalPriceDirect = document.querySelectorAll(".total");
+	for (let x = 0; x < recupItemQuantity.length;x++) {
+		recupItemQuantity[x].addEventListener("click", function(e) {
+			e.preventDefault();
+			const valueQuantite = parseInt(recupItemQuantity[x].value);
+			let articleItem = panier[x].price * valueQuantite;
+			recupTotalPriceDirect[x].innerHTML = articleItem + "€";
+			panier[x].quantite = valueQuantite;
+			localStorage.setItem("panier", JSON.stringify(panier));
+		})
+	};
+	const deleteItem = document.querySelectorAll(".deleteItem");
+	for (let s = 0; s < deleteItem.length;s++) {
+		deleteItem[s].addEventListener("click", function(e) {
+			e.preventDefault();
+			alert(" Vous avez supprimé l'article " + panier[s].name + " du panier");
+			const afficheArticleDifferent = panier.filter(el => el.id != panier[s].id); 
+			localStorage.setItem("panier", JSON.stringify(afficheArticleDifferent)); 
+			window.location.href = "cart.html";
+		})
+	}
+		/// retirer des arrays les valeurs avant changements ////
+})
+function changePriceEtQuantity(arrayTotalPrice,arrayTotalQuantity,articleItem,valueQuantite,recupPrice,recupQuantite) {
+	arrayTotalPrice.push(articleItem);/// push le prix de tout mes éléments dans mon tableau vide /////
+	arrayTotalQuantity.push(valueQuantite); //// push la quantité dans mon tableau vide ////
+
+	let totalPrice = arrayTotalPrice.reduce(reducer);
+	let totalQuantity = arrayTotalQuantity.reduce(reducer);
     ///// implantation des constantes dans le code HTML pour mettre à jour la quantité total et le prix total ///
-    if(recupPrice && recupQuantite) {
+    if(recupPrice) {
         recupPrice.innerHTML = `${totalPrice}`;
-        recupQuantite.innerHTML = `${totalQuantite}`
+		recupQuantite.innerHTML = `${totalQuantity}`;
     }      
 }
+
 const recupFormulaire = document.querySelector(".cart__order__form");
 const envoyerCommande = document.querySelector("#order");
 const recupOrderId = document.querySelector("#orderId");
@@ -141,9 +150,10 @@ if(envoyerCommande) {
 				window.location.href = "confirmation.html?" + data.orderId; //// envoie du numero de commande de l'article dans l'url /// 
 			}
 			else if(panier.length == 0) {
-				alert("Votre panier est vide");
+				alert("Votre panier est vide"); //// utilisation de conditions pour ne pas envoyé la commande si le panier est vide ////
 				data.orderId == null;
 			}
+			///// utilisation de conditions pour ne pas envoyé la commande si le formulaire n'est pas bien remplis
 			else if(prenom() == false && nom() == false && address () == false && ville() == false && email() == false) {
 				alert("Plusieurs champs incorrects");
 				data.orderId == null;
@@ -176,7 +186,7 @@ if(envoyerCommande) {
 	console.log("OrderId du back-end");
 	console.log(recupOrderId);   
 }
-    
+
     
    
    

@@ -28,24 +28,23 @@ requete
             price: product.price,
             id: product._id,
             colors:   recupColors.value,
-            quantite: parseInt( recupQuantite.value),
+            quantite: parseInt(recupQuantite.value,)
         }
         //// création d'un tableau LocalStorage ////
         let array = [];
         array = JSON.parse(localStorage.getItem("panier"));
         ////////// AJOUT DE CONDITIONS POUR STOCKER LESPRODUITS DANS LE LOCALSTORAGE//////////////
         if(array && optionsProduit.colors != "" && optionsProduit.quantite != "0") {
-            let produitExisteDeja = array.find(el => el.id == optionsProduit.id);
-            if(produitExisteDeja) {
-                let resultQuantite = 0;
-                for (let i of array) {
-                    if(optionsProduit.id == i.id){
-                        resultQuantite = i.quantite += optionsProduit.quantite;
+            let IdproduitExisteDeja = array.find(el => el.id == optionsProduit.id);
+            if(IdproduitExisteDeja) {
+                for (let produit of array) {
+                    if(optionsProduit.id == produit.id && optionsProduit.colors == produit.colors) {
+                        let resultQuantite = produit.quantite += optionsProduit.quantite;
                         optionsProduit.quantite = resultQuantite;
-                        array = array.filter(el => el.id != optionsProduit.id)
+                       array = array.filter(el => el.colors != optionsProduit.colors)
                     }
                 }  
-            }                                                                                                                                      
+            }                                                                                                              
             array.push(optionsProduit);
             localStorage.setItem("panier", JSON.stringify(array));
             alert(" Vous avez ajouté l'article " + product.name + " au panier");  
@@ -57,13 +56,13 @@ requete
             alert(" Vous avez ajouté l'article " + product.name + " au panier");
         }
         else if(optionsProduit.colors == "" && optionsProduit.quantite != "0") {
-            alert("Choissisez une couleur pour ajouté votre article au panier");
+            alert("Choissisez une couleur pour ajouté l'article " + product.name + " au panier");
         }
         else if(optionsProduit.quantite = "0" && optionsProduit.colors != "") {
-            alert("Choissisez la quantité de l'article pour l'ajouté au panier")
+            alert("Choissisez la quantité de l'article  " + product.name + " au panier")
         }
         else {
-            alert("L'article n'a pas de couleurs ni de quantité vous ne pouvez pas l'ajouté au panier")
+            alert("Choissisez la couleur et la quantité pour ajouté l'article " + product.name + " au panier")
         }
 
     })
