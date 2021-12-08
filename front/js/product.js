@@ -6,6 +6,7 @@ const requete = fetch(`http://localhost:3000/api/products/${_id}`);
 requete 
 .then (res => res.json()) 
 .then (product => { /// Ajout des informations du produit dans la page produit gràce à la methode then /////
+    console.log(product);
     document.querySelector(".item__img").innerHTML =`<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     document.querySelector("#title").innerHTML =`${product.name}`;
     document.querySelector("#price").innerHTML =`${product.price}`;
