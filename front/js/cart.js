@@ -16,7 +16,7 @@ panier.forEach(produit => {
 	arrayTotalQuantity.push(quantite);
 	let totalQuantity = arrayTotalQuantity.reduce(reducer)
 
-    const recupArticle = document.querySelector("#cart__items");
+	const recupArticle = document.querySelector("#cart__items");
     if(recupArticle) {
         recupArticle.innerHTML +=`<article class="cart__item"data-id="${produit.id}"><div class="cart__item__img"><img src="${produit.img}" 
         alt="${produit.altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${produit.name}</h2>
