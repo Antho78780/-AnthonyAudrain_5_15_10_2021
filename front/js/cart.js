@@ -19,29 +19,28 @@ panier.forEach(produit => {
         recupArticle.innerHTML +=`<article class="cart__item"data-id="${produit.id}"><div class="cart__item__img"><img src="${produit.img}" 
         alt="${produit.altTxt}"></div><div class="cart__item__content"><div class="cart__item__content__titlePrice"><h2>${produit.name}</h2>
         <p class="total">${totalQuantityPrice}€</p></div><div class="cart__item__content__settings"><div class="cart__item__content__settings__quantity"><p>Quantité : </p>
-        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}" prevalue="${quantite}"></div><div class="cart__item__content__settings__delete">
+        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100"value="${quantite}"}"></div><div class="cart__item__content__settings__delete">
      	<p class="deleteItem">Supprimer</p></div></div></div></article`;
 	}
+	let totalQuantity = arrayTotalQuantity.reduce(reducer);
+	let totalPrice = arrayTotalPrice.reduce(reducer);
 	const recupPrice = document.querySelector("#totalPrice");
 	const recupQuantite = document.querySelector("#totalQuantity");
-
+	changePriceEtQuantity(recupPrice, recupQuantite, totalPrice, totalQuantity)
+	
 	const recupItemQuantity = document.querySelectorAll(".itemQuantity");
 	const recupTotalPriceDirect = document.querySelectorAll(".total");
 	for (let x = 0; x < recupItemQuantity.length;x++) {
 		recupItemQuantity[x].addEventListener("click", function(e) {
 			e.preventDefault();
-			const oldValue = recupItemQuantity[x].getAttribute('prevalue');
 			const valueQuantite = parseInt(recupItemQuantity[x].value);
-			let oldPrice = panier[x].price * oldValue;
 			let articleItem = panier[x].price * valueQuantite;
 			recupTotalPriceDirect[x].innerHTML = articleItem + "€";
 			arrayTotalQuantity[x] = valueQuantite;
 			arrayTotalPrice[x] = articleItem;
-			console.log(arrayTotalPrice);
 			let totalQuantity = arrayTotalQuantity.reduce(reducer);
 			let totalPrice = arrayTotalPrice.reduce(reducer);
 			changePriceEtQuantity(recupPrice, recupQuantite, totalPrice, totalQuantity)
-
 			panier[x].quantite = valueQuantite;
 			localStorage.setItem("panier", JSON.stringify(panier));
 		})
@@ -50,7 +49,7 @@ panier.forEach(produit => {
 	for (let s = 0; s < deleteItem.length;s++) {
 		deleteItem[s].addEventListener("click", function(e) {
 			e.preventDefault();
-			alert(" Vous avez supprimé l'article " + panier[s].name + " du panier");
+			alert(" Vous avez supprimé l'article " + panier[s].name + " du panier")
 			const afficheArticleDifferent = panier.filter(el => el.id != panier[s].id); 
 			localStorage.setItem("panier", JSON.stringify(afficheArticleDifferent)); 
 			window.location.href = "cart.html";
